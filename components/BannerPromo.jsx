@@ -11,14 +11,11 @@ export default function BannerPromo() {
                 }}
             />
         </section>
-        <section className="flex justify-center px-6 py-6 mr-26 items-center w-full">
+        <section className="flex flex-col justify-center px-6 py-6 mr-26 items-center w-full">
             <h2 className="text-xl font-bold">
-                MANTENIMIENTO PREVENTIVO A EMPRESAS CON FLOTA DE VEHÍCULOS!
+                TRABAJAMOS TODAS LAS MARCAS
             </h2>
-
-            {/* <button className="bg-white text-red-700 px-6 py-3 rounded-md font-semibold">
-                HABLAR AHORA!
-            </button> */}
+            <p>Nacionales e Importados</p>
         </section>
         <section className="grid grid-rows-2">
             <div></div>

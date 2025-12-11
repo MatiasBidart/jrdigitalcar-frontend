@@ -29,8 +29,9 @@ export function Header() {
             <Image
               src="/jrdigitalcar-logo.png"
               alt="logo"
-              width={50}
-              height={50}
+              width={80}
+              height={80}
+              className="m-2 p-2"
             />
             <div className="hidden sm:block text-left">
               <div className="uppercase tracking-wider">

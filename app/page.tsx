@@ -3,9 +3,11 @@
 import { Hero } from "@/components/Hero";
 import { Services } from "@/components/Services";
 import { useRouter } from "next/navigation";
-import BannerPromo from "../components/BannerPromo";
-import InfoComponent from "../components/InfoComponent"
-
+import { LogoBanner } from "@/components/LogoBanner";
+import BannerPromo from "@/components/BannerPromo";
+import ParallaxSection from "@/components/ParallaxSection";
+import { MapSection } from "@/components/MapSection";
+import { FleetSolutions } from "@/components/FleetSolutions";
 export default function HomePage() {
   const router = useRouter();
 
@@ -17,11 +19,15 @@ export default function HomePage() {
   return (
     <>
       <Hero onNavigate={handleNavigate} />
+      <div className="w-full bg-red-700 h-5"></div>
+      <LogoBanner/>
       <div className="hidden md:block">
         <BannerPromo />
       </div>
-      <InfoComponent/>
       <Services/>
+      <ParallaxSection/>
+      <MapSection/>
+    
       
 
       <div className="bg-black text-white py-16">
