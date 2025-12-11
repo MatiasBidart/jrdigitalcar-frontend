@@ -1,5 +1,5 @@
-import { img } from 'framer-motion/client';
-import { motion } from 'motion/react';
+// import { img } from 'framer-motion/client';
+import { motion, easeInOut } from 'motion/react';
 
 export function LogoBanner() {
   const floatVariants = {
@@ -10,7 +10,7 @@ export function LogoBanner() {
       transition: {
         duration: 8,
         repeat: Infinity,
-        ease: 'easeInOut',
+        ease: easeInOut,
       },
     },
     float2: {
@@ -20,7 +20,7 @@ export function LogoBanner() {
       transition: {
         duration: 9,
         repeat: Infinity,
-        ease: 'easeInOut',
+        ease: easeInOut,
       },
     },
     float3: {
@@ -30,7 +30,7 @@ export function LogoBanner() {
       transition: {
         duration: 10,
         repeat: Infinity,
-        ease: 'easeInOut',
+        ease: easeInOut,
       },
     },
     float4: {
@@ -40,12 +40,11 @@ export function LogoBanner() {
       transition: {
         duration: 7.5,
         repeat: Infinity,
-        ease: 'easeInOut',
+        ease: easeInOut,
       },
     },
   };
 
-  // Igual que antes, pero ahora Icon representa solo el tamaño necesario.
   const logoPositions = [
     { top: '20%', right: '20%', variant: 'float1', size: 'w-12 h-12 md:w-16 md:h-16', img:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/1024px-BMW.svg.png' },
     { top: '25%', left: '18%', variant: 'float2', size: 'w-12 h-12 md:w-16 md:h-16', img:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mercedes-Logo.svg/1200px-Mercedes-Logo.svg.png' },
@@ -58,7 +57,6 @@ export function LogoBanner() {
 
   return (
     <div className="relative bg-gray-100 overflow-hidden h-[50vh] md:h-[60vh] min-h-[300px]">
-      {/* Background Circle */}
       <div className="absolute inset-0 flex items-center justify-center">
         <motion.div
           className="w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-full bg-gray-700/20"
@@ -66,37 +64,11 @@ export function LogoBanner() {
           transition={{
             duration: 6,
             repeat: Infinity,
-            ease: 'easeInOut',
+            ease: easeInOut,
           }}
         />
       </div>
 
-      {/* ------------ */}
-    <div className="absolute inset-0 flex items-center justify-center z-10">
-      <motion.div
-        animate={{
-          scale: [1, 1.02, 1],
-          rotate: [0, 2, 0, -2, 0],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
-      >
-        {/* Contenedor RESPONSIVE con los mismos tamaños que usabas */}
-        <div className="relative w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48">
-          <img
-            src="/jrdigitalcar-logo.png"
-            alt="floating-logo"
-            className="w-full h-full object-contain rounded-xl pointer-events-none select-none"
-          />
-        </div>
-      </motion.div>
-    </div>
-
-
-      {/* Main Center Logo (reemplazado por un div negro del mismo tamaño)
       <div className="absolute inset-0 flex items-center justify-center z-10">
         <motion.div
           animate={{
@@ -106,14 +78,19 @@ export function LogoBanner() {
           transition={{
             duration: 8,
             repeat: Infinity,
-            ease: 'easeInOut',
+            ease: easeInOut,
           }}
         >
-          <div className="bg-black w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-xl" />
+          <div className="relative w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48">
+            <img
+              src="/jrdigitalcar-logo.png"
+              alt="floating-logo"
+              className="w-full h-full object-contain rounded-xl pointer-events-none select-none"
+            />
+          </div>
         </motion.div>
-      </div> */}
+      </div>
 
-      {/* Floating "icons" reemplazados por divs negros */}
       {logoPositions.map((item, index) => (
         <motion.div
           key={index}
@@ -131,7 +108,6 @@ export function LogoBanner() {
         </motion.div>
       ))}
 
-      {/* Pattern overlay */}
       <div
         className="absolute inset-0 opacity-5"
         style={{

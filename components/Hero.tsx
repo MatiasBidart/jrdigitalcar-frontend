@@ -26,7 +26,7 @@ const slides: HeroSlide[] = [
     badge: "Expertos en Rectificación de Motores y Tapas de Cilindros",
     title: "Rectificación de Motores y Mecánica Integral Para Empresas",
     description:
-      "Más de 20 años devolviendo la vida a tu motor. Tecnología de punta, experiencia garantizada y el mejor servicio para tu vehículo.",
+    "Especialistas en rectificación de alta precisión. Devolvemos el rendimiento original a tu motor con las mejores técnicas del mercado.",
     image:
       "https://cdn.pixabay.com/photo/2017/03/19/18/51/tuning-2157354_1280.jpg",
     feature: { title: "20+ Años", description: "De experiencia", img: "https://static.vecteezy.com/system/resources/thumbnails/045/912/728/small/complex-black-and-blue-engine-cut-out-stock-png.png" }
@@ -35,7 +35,7 @@ const slides: HeroSlide[] = [
     badge: "Rodamientos",
     title: "Alineación & Balanceo",
     description:
-      "Utilizamos equipos de última generación para diagnosticar y reparar tu motor. Precisión, eficiencia y resultados garantizados en cada trabajo.",
+      "En nuestra planta de 2000 m², ofrecemos todos los servicios necesarios para tu automóvil o tu flota. ",
     image:
       "https://images.pexels.com/photos/21694/pexels-photo.jpg",
     feature: { title: "Equipamiento", description: "Tecnología avanzada", img: "https://i.postimg.cc/MGdnpfGd/wheel.png" }
@@ -44,7 +44,7 @@ const slides: HeroSlide[] = [
     badge: "Tecnología de Punta",
     title: "Diagnóstico Computarizado para Flotas",
     description:
-      "Especialistas en rectificación de alta precisión. Devolvemos el rendimiento original a tu motor con las mejores técnicas del mercado.",
+    "Utilizamos equipos de última generación para diagnosticar y reparar tu motor. Precisión, eficiencia y resultados garantizados en cada trabajo.",
     image:
       "https://i.postimg.cc/3xLFvVyt/Chat-GPT-Image-10-dec-2025-19-21-16.png",
     feature: { title: "Experiencia", description: "Años de trayectoria", img: "https://i.postimg.cc/nL0Xh9L3/launch.png" }
@@ -53,7 +53,7 @@ const slides: HeroSlide[] = [
     badge: "Mantenimiento de Flotas Vehículares",
     title: "Servicio Personalizado a Empresas",
     description:
-      "Ofrecemos garantía en todos nuestros trabajos. Calidad, responsabilidad y atención personalizada para cada cliente.",
+    "Más de 30 años ofreciendo mantenimiento a flotas vehiculares. Atención personalizada, conocemos tus necesidades.",
     image:
       "https://images.pexels.com/photos/515674/pexels-photo-515674.jpeg",
     feature: { title: "Garantía Total", description: "En cada servicio", img: "https://i.postimg.cc/660BJxyC/car.png" }
