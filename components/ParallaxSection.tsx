@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, easeOut } from "motion/react";
 
 export default function ParallaxSection() {
   // Variants para animación
@@ -15,7 +15,7 @@ export default function ParallaxSection() {
 
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: easeOut } },
   };
 
   return (
@@ -68,10 +68,11 @@ export default function ParallaxSection() {
             className="text-gray-300 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto"
             variants={itemVariants}
           >
-            ¿Se te detuvo un auto?. Nosotros te lo retiramos de la vía pública o de tu depósito con nuestro servicio de grúa. Para que no tengas que preocuparte por nada más que tu eficiencia.
+            ¿Se te detuvo un auto? Nosotros te lo retiramos de la vía pública o de tu depósito con nuestro servicio de grúa. Para que no tengas que preocuparte por nada más que tu eficiencia.
           </motion.p>
         </motion.div>
       </motion.div>
     </div>
   );
 }
+
