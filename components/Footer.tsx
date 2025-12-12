@@ -79,7 +79,9 @@ export function Footer() {
 
                 <div>
                   <div>Lunes - Viernes</div>
-                  <div className="text-white">8:00 AM - 5:00 PM</div>
+                  <a href="https://wa.me/5491154521992?text=Hola,%20encontré%20el%20boton%20magico!">
+                  <div className="text-white cursor-pointer">8:00 AM - 5:00 PM</div>
+                  </a>
                 </div>
               </div>               
             </div>

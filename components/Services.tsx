@@ -187,7 +187,8 @@ export function Services() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <a
-              href="tel:+5491154521992"
+              // href="tel:+5491154521992"
+              href="https://wa.me/5491154521992?text=Hola,%20estoy%20buscando%20el%20botón%20mágico!"
               className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg transition-colors"
             >
               Llamar Ahora
