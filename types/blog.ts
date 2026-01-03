@@ -9,6 +9,8 @@ export interface BlogPost {
   imageUrl: string;
   category: string;
   tags: string[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface BlogFormData {
