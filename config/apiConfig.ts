@@ -4,8 +4,5 @@
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL;
 
-console.log("🌍 NEXT_PUBLIC_API_URL:", process.env.NEXT_PUBLIC_API_URL);
-console.log("🚀 API_BASE_URL:", API_BASE_URL);
-
 // 🔹 Helper opcional para concatenar rutas
 export const apiEndpoint = (path: string) => `${API_BASE_URL}${path}`;
