@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { BlogPost } from "@/types/blog";
 import { BlogCard } from "./BlogCard";
 import { CategoryService, Category } from "@/services/categoryService";
-import { BlogService } from "@/services/blogService"; // 🔹 Nuevo import
+import { BlogService } from "@/services/blogService";
 import { AdBanner } from "@/components/ads/AdBanner";
 
 interface BlogListProps {
@@ -23,7 +23,7 @@ export function BlogList({ initialPosts }: BlogListProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // 🔹 Obtener todas las categorías al montar
+  // 🔹 Obtener categorías
   useEffect(() => {
     const fetchCategories = async () => {
       const data = await CategoryService.getAll();
@@ -32,9 +32,28 @@ export function BlogList({ initialPosts }: BlogListProps) {
     fetchCategories();
   }, []);
 
-  // 🔹 Filtrar o pedir por categoría desde el backend
+  // 🔹 Obtener posts actualizados cada vez que se entra a /blog
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchLatestPosts = async () => {
+      setLoading(true);
+      try {
+        const freshPosts = await BlogService.getAllPosts(); // 🔥 obtiene todos los posts actualizados
+        setPosts(freshPosts);
+        setFilteredPosts(freshPosts);
+      } catch (err) {
+        console.error("Error cargando artículos actualizados:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // ejecuta cada vez que se monta la ruta o vuelve a /blog
+    fetchLatestPosts();
+  }, [router]);
+
+  // 🔹 Filtrar o pedir por categoría
+  useEffect(() => {
+    const fetchPostsByCategory = async () => {
       setLoading(true);
       try {
         if (selectedCategory === "all") {
@@ -55,14 +74,17 @@ export function BlogList({ initialPosts }: BlogListProps) {
       }
     };
 
-    fetchPosts();
+    fetchPostsByCategory();
   }, [selectedCategory, categories, posts]);
 
   // 🔹 Filtrado por búsqueda local
   useEffect(() => {
-    if (searchTerm.trim() === "") return;
+    if (searchTerm.trim() === "") {
+      setFilteredPosts(posts);
+      return;
+    }
 
-    const filtered = filteredPosts.filter((post) => {
+    const filtered = posts.filter((post) => {
       const tags = Array.isArray(post.tags) ? post.tags.join(" ") : "";
       const excerpt = post.excerpt || "";
       const contentToSearch = `${post.title} ${excerpt} ${tags}`.toLowerCase();
@@ -70,12 +92,12 @@ export function BlogList({ initialPosts }: BlogListProps) {
     });
 
     setFilteredPosts(filtered);
-  }, [searchTerm]);
+  }, [searchTerm, posts]);
 
   return (
     <div className="py-16 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4">
-        {/* Ad Banner 728x90 || 320x50 */}
+        {/* Ad Banner */}
         <AdBanner
           desktopImage="/ads/banner(728x90).png"
           mobileImage="/ads/banner(320x50).png"
