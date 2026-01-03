@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import axios from "axios";
+import { API_BASE_URL } from "@/config/apiConfig";
 
 interface LoginPageProps {
   onLoginSuccess: () => void;
@@ -17,7 +18,7 @@ export function LoginPage({ onLoginSuccess }: LoginPageProps) {
     setError("");
 
     try {
-      const res = await axios.post("http://localhost:9000/api/v1/auth/login", {
+      const res = await axios.post(`${API_BASE_URL}/auth/login`, {
         email,
         password,
       });
