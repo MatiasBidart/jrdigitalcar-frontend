@@ -1,6 +1,6 @@
 import { motion, easeInOut } from 'motion/react';
 
-export function FleetSolutions() {
+export function ElementBanner() {
   return (
     <div className="bg-white">
       {/* Key Benefits */}

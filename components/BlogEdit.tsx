@@ -1,77 +1,131 @@
-import { useState, useEffect } from 'react';
-import { BlogPost, BlogFormData } from '@/types/blog';
+import { useState, useEffect } from "react";
+import { BlogPost, BlogFormData } from "@/types/blog";
+import { CategoryService, Category } from "@/services/categoryService";
+import { TagService, Tag } from "@/services/tagService";
+import { TagBlogService } from "@/services/tagBlogService";
 
 interface BlogEditorProps {
   post?: BlogPost;
-  onSave: (formData: BlogFormData) => void;
+  onSave: (formData: BlogFormData) => Promise<BlogPost | null>;
   onCancel: () => void;
 }
 
 export function BlogEditor({ post, onSave, onCancel }: BlogEditorProps) {
   const [formData, setFormData] = useState<BlogFormData>({
-    title: '',
-    excerpt: '',
-    content: '',
-    author: '',
-    imageUrl: '',
-    category: '',
-    tags: '',
+    title: "",
+    excerpt: "",
+    content: "",
+    imageUrl: "",
+    categoryId: "",
+    tags: "",
   });
 
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [availableTags, setAvailableTags] = useState<Tag[]>([]);
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
+
+  // 🔹 Cargar categorías y tags del backend
   useEffect(() => {
-    if (post) {
+    const fetchData = async () => {
+      const [cats, tags] = await Promise.all([
+        CategoryService.getAll(),
+        TagService.getAll(),
+      ]);
+      setCategories(cats);
+      setAvailableTags(tags);
+    };
+    fetchData();
+  }, []);
+
+  // 🔹 Si se edita un post existente
+  useEffect(() => {
+    const loadPostData = async () => {
+      if (!post) return;
+
       setFormData({
         title: post.title,
-        excerpt: post.excerpt,
+        excerpt: post.excerpt || "",
         content: post.content,
-        author: post.author,
-        imageUrl: post.imageUrl,
-        category: post.category,
-        tags: post.tags.join(', '),
+        imageUrl: post.imageUrl || "",
+        categoryId: post.categoryId || "",
+        tags: post.tags?.join(", ") || "",
       });
-    }
+
+      const relations = await TagBlogService.getByBlog(post.id);
+      const tagIds = relations.map((r) => r.tagId);
+      setSelectedTagIds(tagIds);
+    };
+
+    loadPostData();
   }, [post]);
 
+  // 🔹 Inputs
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // 🔹 Tags
+  const toggleTag = (tagId: string, tagName: string) => {
+    setSelectedTagIds((prev) =>
+      prev.includes(tagId)
+        ? prev.filter((id) => id !== tagId)
+        : [...prev, tagId]
+    );
+
+    setFormData((prev) => {
+      const tagList = prev.tags
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean);
+      const updated = tagList.includes(tagName)
+        ? tagList.filter((t) => t !== tagName)
+        : [...tagList, tagName];
+      return { ...prev, tags: updated.join(", ") };
+    });
+  };
+
+  // 🔹 Guardar
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.title || !formData.content || !formData.author) {
-      alert('Por favor completa los campos obligatorios');
+
+    if (!formData.title || !formData.content || !formData.categoryId) {
+      alert("Por favor completa los campos obligatorios");
       return;
     }
-    onSave(formData);
+
+    const savedPost = await onSave(formData);
+
+    if (savedPost?.id) {
+      await TagBlogService.syncTagsForBlog(savedPost.id, selectedTagIds);
+    }
+
+    alert("✅ Artículo publicado correctamente");
   };
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-start justify-center overflow-y-auto p-2 sm:p-4">
-      <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-4xl my-4 sm:my-8">
-
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl my-4 sm:my-8">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 sm:p-6 border-b-2 border-gray-200">
+        <div className="flex items-center justify-between p-4 border-b-2 border-gray-200">
           <h3 className="text-black text-xl sm:text-2xl md:text-3xl">
-            {post ? 'Editar Artículo' : 'Nuevo Artículo'}
+            {post ? "Editar Artículo" : "Nuevo Artículo"}
           </h3>
           <button
             onClick={onCancel}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-            </svg>
-
+            ✖️
           </button>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-
-          {/* Title */}
+        {/* Formulario */}
+        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          {/* Título */}
           <div>
             <label className="block text-gray-700 mb-2">
               Título <span className="text-red-600">*</span>
@@ -82,12 +136,12 @@ export function BlogEditor({ post, onSave, onCancel }: BlogEditorProps) {
               value={formData.title}
               onChange={handleChange}
               placeholder="Título del artículo"
-              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-red-600 focus:outline-none transition-colors"
+              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-red-600"
               required
             />
           </div>
 
-          {/* Excerpt */}
+          {/* Extracto */}
           <div>
             <label className="block text-gray-700 mb-2">
               Extracto <span className="text-red-600">*</span>
@@ -96,132 +150,106 @@ export function BlogEditor({ post, onSave, onCancel }: BlogEditorProps) {
               name="excerpt"
               value={formData.excerpt}
               onChange={handleChange}
-              placeholder="Breve descripción del artículo"
               rows={3}
-              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-red-600 focus:outline-none transition-colors resize-none"
+              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-red-600 resize-none"
               required
             />
           </div>
 
-          {/* Content */}
+          {/* Contenido */}
           <div>
             <label className="block text-gray-700 mb-2">
               Contenido <span className="text-red-600">*</span>
             </label>
-            <div className="text-sm text-gray-500 mb-2 space-y-1">
-              <div>Puedes usar Markdown:</div>
-              <div>• ## para títulos grandes, ### para títulos medianos</div>
-              <div>• **negrita** para texto en negrita</div>
-              <div>• - para listas con viñetas</div>
-              <div>• ![descripción](url-de-imagen) para insertar imágenes</div>
-            </div>
+            <p className="text-gray-400 text-sm mb-4">Puedes usar Markdown:<br></br>
+            • # para títulos grandes, ## para títulos medianos, ### para títulos pequeños.<br></br>
+            • **negrita** para texto en negrita<br></br>
+            • *cursiva* para texto en cursiva<br></br>
+            • - para listas con viñetas.<br></br>
+            • ![descripción](url-de-imagen) para insertar imágenes
+            </p>
             <textarea
               name="content"
               value={formData.content}
               onChange={handleChange}
-              placeholder="Contenido completo del artículo"
-              rows={12}
-              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-red-600 focus:outline-none transition-colors resize-none font-mono text-sm"
+              rows={10}
+              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-red-600 font-mono text-sm resize-none"
               required
             />
           </div>
 
-          {/* Author + Category */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-            <div>
-              <label className="block text-gray-700 mb-2">
-                Autor <span className="text-red-600">*</span>
-              </label>
-              <input
-                type="text"
-                name="author"
-                value={formData.author}
-                onChange={handleChange}
-                placeholder="Nombre del autor"
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-red-600 focus:outline-none transition-colors"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-gray-700 mb-2">
-                Categoría <span className="text-red-600">*</span>
-              </label>
-              <select
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-red-600 focus:outline-none transition-colors bg-white"
-                required
-              >
-                <option value="">Seleccionar categoría</option>
-                <option value="Mantenimiento">Mantenimiento</option>
-                <option value="Rectificación">Rectificación</option>
-                <option value="Tecnología">Tecnología</option>
-                <option value="Consejos">Consejos</option>
-                <option value="Noticias">Noticias</option>
-              </select>
-            </div>
+          {/* Categoría */}
+          <div>
+            <label className="block text-gray-700 mb-2">
+              Categoría <span className="text-red-600">*</span>
+            </label>
+            <select
+              name="categoryId" // ✅ el backend espera este nombre
+              value={formData.categoryId}
+              onChange={handleChange}
+              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-red-600 bg-white"
+              required
+            >
+              <option value="">Seleccionar categoría</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
           </div>
 
-          {/* Image URL */}
+          {/* Imagen */}
           <div>
             <label className="block text-gray-700 mb-2">
               URL de Imagen <span className="text-red-600">*</span>
             </label>
-            <div className="flex gap-2">
-              <div className="flex-1 relative">
-                
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6 absolute left-3 top-1/2 -translate-y-1/2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                </svg>
-
-
-                <input
-                  type="url"
-                  name="imageUrl"
-                  value={formData.imageUrl}
-                  onChange={handleChange}
-                  placeholder="https://ejemplo.com/imagen.jpg"
-                  className="w-full pl-10 pr-4 py-3 border-2 border-gray-300 rounded-lg focus:border-red-600 focus:outline-none transition-colors"
-                  required
-                />
-              </div>
-            </div>
-            <div className="text-sm text-gray-500 mt-1">
-              Ingresa una URL de imagen de Unsplash o similar
-            </div>
+            <input
+              type="url"
+              name="imageUrl"
+              value={formData.imageUrl}
+              onChange={handleChange}
+              placeholder="https://ejemplo.com/imagen.jpg"
+              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-red-600"
+              required
+            />
           </div>
 
           {/* Tags */}
           <div>
             <label className="block text-gray-700 mb-2">Etiquetas</label>
-            <input
-              type="text"
-              name="tags"
-              value={formData.tags}
-              onChange={handleChange}
-              placeholder="motor, mantenimiento, reparación (separadas por comas)"
-              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-red-600 focus:outline-none transition-colors"
-            />
+            <div className="flex flex-wrap gap-2 mt-2">
+              {availableTags.map((tag) => {
+                const isSelected = selectedTagIds.includes(tag.id);
+                return (
+                  <span
+                    key={tag.id}
+                    onClick={() => toggleTag(tag.id, tag.name)}
+                    className={`cursor-pointer px-3 py-1 rounded-full text-sm border transition-all ${
+                      isSelected
+                        ? "bg-red-600 text-white border-red-600"
+                        : "bg-gray-100 text-gray-700 border-gray-300 hover:bg-red-50"
+                    }`}
+                  >
+                    #{tag.name}
+                  </span>
+                );
+              })}
+            </div>
           </div>
 
-          {/* Actions */}
+          {/* Botones */}
           <div className="flex gap-4 pt-6 border-t-2 border-gray-200">
             <button
               type="submit"
-              className="flex-1 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
+              className="flex-1 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg transition-colors cursor-pointer"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6 opacity-90">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3 7.5 7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
-              </svg>
-              {post ? 'Actualizar' : 'Publicar'}
+              {post ? "Actualizar" : "Publicar"}
             </button>
             <button
               type="button"
               onClick={onCancel}
-              className="px-6 py-3 border-2 border-gray-300 hover:border-gray-400 rounded-lg transition-colors"
+              className="px-6 py-3 border-2 border-gray-300 hover:border-gray-400 rounded-lg transition-colors cursor-pointer"
             >
               Cancelar
             </button>

@@ -17,6 +17,6 @@ export interface BlogFormData {
   content: string;
   author: string;
   imageUrl: string;
-  category: string;
+  categoryId: string;
   tags: string;
 }

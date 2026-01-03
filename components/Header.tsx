@@ -9,10 +9,11 @@ export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  // const navItems = [
-  //   { href: "/", label: "Inicio" },
-  //   { href: "/blog", label: "Blog" },
-  // ];
+  const navItems = [
+    { href: "/blog", label: "Blog" },
+    { href: "/servicios", label: "Servicios" },
+    { href:"/flotas", label: "Fleet Maintenance"}
+  ];
 
   return (
     <header className="bg-black text-white sticky top-0 z-50 shadow-lg">
@@ -42,7 +43,7 @@ export function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          {/* <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-10">
             {navItems.map((item) => {
               const active = pathname === item.href;
 
@@ -50,43 +51,50 @@ export function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`relative py-2 transition-colors ${
+                  className={`relative py-2 transition-colors min-w-14 text-center ${
                     active
                       ? "text-red-600"
                       : "text-white hover:text-red-600"
                   }`}
                 >
                   {item.label}
-                  {active && (
-                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-red-600" />
-                  )}
+                {active && (
+                  <div className="absolute top-14 left-0 right-0 h-[3px] bg-gradient-to-r from-red-600 to-pink-500 shadow-[0_0_8px_2px_rgba(244,63,94,0.6)] rounded-full" />
+                )}
                 </Link>
               );
             })}
 
             <Link
-              href="/admin"
+              href="/contacto"
               className="bg-red-600 hover:bg-red-700 px-6 py-2 rounded-lg transition-colors"
             >
-              Admin
+              Contacto
             </Link> 
-          </nav> */}
+          </nav>
 
           {/* Mobile Menu Button */}
-          {/* <button
+          <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden p-2 rounded-lg hover:bg-gray-800 transition-colors"
           >
+
             {isMenuOpen ? (
-              <div className="w-6 h-6 bg-black" />
+ <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6 text-white">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+</svg>
+
             ) : (
-              <div className="w-6 h-6 bg-red" />
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6 text-white">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+</svg>
+
             )}
-          </button> */}
+          </button>
         </div>
 
         {/* Mobile Navigation */}
-        {/* {isMenuOpen && (
+        {isMenuOpen && (
           <nav className="md:hidden py-4 border-t border-gray-800">
             {navItems.map((item) => {
               const active = pathname === item.href;
@@ -108,14 +116,14 @@ export function Header() {
             })}
 
             <Link
-              href="/admin"
+              href="/contacto"
               onClick={() => setIsMenuOpen(false)}
               className="block w-full text-left py-3 px-4 bg-red-600 hover:bg-red-700 text-white mt-2 rounded-lg transition-colors"
             >
-              Admin
+              Contacto
             </Link>
           </nav>
-        )} */}
+        )}
       </div>
     </header>
   );
