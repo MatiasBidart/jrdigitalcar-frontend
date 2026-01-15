@@ -33,21 +33,21 @@ export default function RootLayout({
               j.async=true;
               j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
               f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','GTM-PP4D7B73');
+            })(window,document,'script','dataLayer','GTM-N5S8ZN9K');
           `}
         </Script>
       </head>
       <body>
-       {/* Google Tag Manager (noscript) */}
+        {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-PP4D7B73"
+            src="https://www.googletagmanager.com/ns.html?id=GTM-N5S8ZN9K"
             height="0"
             width="0"
             style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
-{/* End Tag Manager */}
+        {/* End Google Tag Manager (noscript) */}
         <div className="min-h-screen flex flex-col">
           <Header />
           <main className="flex-1">{children}</main>

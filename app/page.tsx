@@ -7,6 +7,7 @@ import { LogoBanner } from "@/components/LogoBanner";
 import ParallaxSection from "@/components/ParallaxSection";
 import { MapSection } from "@/components/MapSection";
 import { ElementBanner } from "@/components/ElementBanner";
+// import GoogleReviews from "@/components/GoogleReviews"
 export default function HomePage() {
   const router = useRouter();
 
@@ -20,6 +21,7 @@ export default function HomePage() {
       <Hero onNavigate={handleNavigate} />
       <div className="w-full bg-red-700 h-5"></div>
       <LogoBanner/>
+      {/* <GoogleReviews/> */}
       <ElementBanner/>
       <Services/>
       <ParallaxSection/>
