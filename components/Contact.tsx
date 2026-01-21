@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { MapSection } from './MapSection';
-
+import { trackLinkedIn } from '@/utils/trackLinkedIn';
 
 export function Contact({children}) {
   const [formData, setFormData] = useState({
@@ -42,6 +42,7 @@ export function Contact({children}) {
       service: '',
       message: '',
       });
+      trackLinkedIn(25488346)
     } else {
       alert("❌ Error al enviar el mensaje: " + data.message);
     }
