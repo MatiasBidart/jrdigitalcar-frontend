@@ -12,7 +12,8 @@ export function Header() {
   const navItems = [
     { href: "/blog", label: "Blog" },
     { href: "/servicios", label: "Servicios" },
-    { href:"/flotas", label: "Fleet Maintenance"}
+    { href:"/flotas", label: "Fleet Maintenance"},
+    { href:"/rectificacion", label: "Rectificación"}
   ];
 
   return (
